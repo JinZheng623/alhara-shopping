@@ -18,9 +18,18 @@ class ViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityInspector.startAnimating()
-        let url = NSURL(string: "https://alhara.net/dev/")
+        URLCache.shared.removeAllCachedResponses()
+        
+        // Delete any associated cookies
+        if let cookies = HTTPCookieStorage.shared.cookies {
+            for cookie in cookies {
+                HTTPCookieStorage.shared.deleteCookie(cookie)
+            }
+        }
+        let url = NSURL(string: "https://alhara.net/")
         let requestObj = NSURLRequest(url: url as! URL)
        myWebView.loadRequest(requestObj as URLRequest)
+        myWebView.isHidden = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,10 +42,13 @@ class ViewController: UIViewController, UIWebViewDelegate {
         activityInspector.stopAnimating()
         logoImageView.isHidden = true
         logoImageView.isOpaque = false
+        myWebView.isHidden = false
     }
     
     func webViewDidStartLoad(_ webView: UIWebView) {
         activityInspector.startAnimating()
+//        logoImageView.isHidden = true
+//        logoImageView.isOpaque = false
     }
 
 }
